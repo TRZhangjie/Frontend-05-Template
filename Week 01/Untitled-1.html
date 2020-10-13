@@ -52,9 +52,9 @@
         }
         color = 3 - color
         show()
-        // if (willWin(pattern, color)) {
-        //     console.log(color == 2 ? "❌ will win" : "⭕️ will win")
-        // }
+        if (willWin(pattern, color)) {
+            console.log(color == 2 ? "❌ will win" : "⭕️ will win")
+        }
     }
     function check(pattern, color) {
         // 横轴坐标值校验
@@ -113,11 +113,12 @@
                 if (pattern[i][j]) continue
                 let tmp = clone(pattern)
                 tmp[i][j] = color
-                if (check(tmp.color)) {
+                if (check(tmp, color)) {
                     return true
                 }
             }
         }
+        return false
     }
     show(pattern)
 </script>
