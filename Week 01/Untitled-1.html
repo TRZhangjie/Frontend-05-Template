@@ -39,22 +39,28 @@
                 let obj = pattern[i][j]
                 let text = obj == 2 ? '❌' : obj == 1 ? '⭕️' : ''
                 cell.innerText = text
-                cell.addEventListener('click', () => move(i, j))
+                cell.addEventListener('click', () => userMove(i, j))
                 board.appendChild(cell)
             }
             board.appendChild(document.createElement('br'))
         }
     }
-    function move(x, y) {
+    function userMove(x, y) {
+        console.log(bestChoice(pattern, color))
         pattern[x][y] = color;
         if (check(pattern, color)) {
             alert(color == 2 ? "❌ is winner" : "⭕️ is winner")
         }
         color = 3 - color
         show()
+        computerMove()
+        console.log(bestChoice(pattern, color))
         if (willWin(pattern, color)) {
             console.log(color == 2 ? "❌ will win" : "⭕️ will win")
         }
+    }
+    function computerMove() {
+
     }
     function check(pattern, color) {
         // 横轴坐标值校验
@@ -130,7 +136,7 @@
         }
         let result = -2
         let point = null
-        for (let i = 0; i < 3; i++) {
+        outer: for (let i = 0; i < 3; i++) {
             for (let j = 0; j < 3; j++) {
                 if (pattern[i][j]) continue
                 let tmp = clone(pattern)
@@ -139,6 +145,9 @@
                 if (-r > result) {
                     result = -r
                     point = [i, j]
+                }
+                if (result === 1) {
+                    break outer
                 }
             }
         }
