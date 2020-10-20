@@ -1,22 +1,31 @@
 <script>
     var regexp = /([0-9\.]+)|([ \t]+)|([\r\n]+)|(\*)|(\/)|(\+)|(\-)/g
     var dictionary = ['Number', 'Whitespace', 'LineTerminator', '*', '/', '+', '-']
-    function tokennize(source) {
+    function* tokennize(source) {
         var result = null
+        var lastIndex = 0
         while (true) {
-            /*
-            result 会返回一个长度为8的数组，因为regexp正则包含7个子表达式，
-            第一个值为整个正则表达式匹配的值，其余为对应子表达匹配的结果
-            */
+            lastIndex = regexp.lastIndex
             result = regexp.exec(source)
             if (!result) break;
-
-            for (var i = 0; i <= dictionary.length; i++) {
-                if (result[i]) console.log(dictionary[i - 1])
+            if (regexp.lastIndex - lastIndex > result[0].length) break;
+            let token = {
+                type: null,
+                value: null
             }
-            console.log(result)
+            for (var i = 0; i <= dictionary.length; i++) {
+                if (result[i])
+                    token.type = dictionary[i - 1]
+            }
+            token.value = result[0]
+            yield token
+        }
+        yield {
+            type: 'EOF',
         }
     }
-    tokennize('1024 + 10 * 25')
+    for (let token of tokennize('1024 + 10 * 25')) {
+        console.log(token)
+    }
 
 </script>
