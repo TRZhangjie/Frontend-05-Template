@@ -1,0 +1,26 @@
+<script>
+    // setTimeout(() => console.log("d"), 0)
+    // var r = new Promise(function (resolve, reject) {
+    //     resolve()
+    // });
+    // r.then(() => {
+    //     var begin = Date.now();
+    //     while (Date.now() - begin < 1000);
+    //     console.log("c1")
+    //     new Promise(function (resolve, reject) {
+    //         resolve()
+    //     }).then(() => console.log("c2"))
+    // });
+    function sleep(duration) {
+        return new Promise(
+            function (resolve, reject) {
+                console.log("b");
+                setTimeout(resolve, duration);
+            }
+        )
+    }
+    console.log("a");
+    sleep(5000).then(function () {
+        console.log("c")
+    });
+</script>
