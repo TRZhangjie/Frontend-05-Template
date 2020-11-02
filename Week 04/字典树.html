@@ -1,0 +1,145 @@
+<script>
+
+    class Queue {
+        constructor() {
+            this._oldestIndex = 0;
+            this._newestIndex = 0;
+            this._storage = Array(1000);
+        }
+
+        size() {
+            return this._newestIndex - this._oldestIndex;
+        }
+
+        enqueue(data) {
+            this._storage[this._newestIndex] = data;
+            this._newestIndex++;
+        }
+
+        dequeue() {
+            let oldestIndex = this._oldestIndex,
+                newestIndex = this._newestIndex,
+                deletedData;
+
+            if (oldestIndex !== newestIndex) {
+                deletedData = this._storage[oldestIndex];
+                this._storage[oldestIndex] = undefined;
+                this._oldestIndex++;
+
+                return deletedData;
+            } else {
+                this._newestIndex = this._oldestIndex = 0
+            }
+        }
+    }
+
+
+    class MyTrie {
+        constructor() {
+            this.root = Object.create(null)
+            this.count = Symbol('count')
+            this.word = Symbol('word')
+        }
+        insert(word) {
+            let node = this.root
+            for (let c of word) {
+                if (!node[c]) {
+                    node[c] = Object.create(null);
+                }
+                node = node[c]
+            }
+            if (!(node[this.count]))
+                node[this.count] = 0
+            node[this.count]++
+        }
+
+        most() {
+            console.time('Iteration')
+            let max = 0
+            let maxWord = null
+            let findMax = (node) => {
+                const queue = new Queue()
+                queue.enqueue(node)
+                while (queue.size()) {
+                    let node = queue.dequeue()
+                    if (node[this.count] && node[this.count] > max) {
+                        max = node[this.count]
+                        maxWord = node[this.word]
+                    }
+
+                    for (let p in node) {
+                        queue.enqueue({
+                            ...node[p],
+                            [this.word]: (node[this.word] || '') + p
+                        })
+
+                    }
+                }
+            }
+
+            findMax(this.root)
+            console.log({ maxWord, max })
+            console.timeEnd('Iteration')
+
+            return max
+        }
+    }
+
+
+    class Trie {
+        constructor() {
+            this.root = Object.create(null)
+            this.$ = Symbol('$')
+        }
+        insert(word) {
+            let node = this.root
+            for (let c of word) {
+                if (!node[c])
+                    node[c] = Object.create(null);
+                node = node[c]
+            }
+
+            if (!(node[this.$]))
+                node[this.$] = 0
+            node[this.$]++
+        }
+
+        most() {
+            console.time('Recursion')
+            let max = 0
+            let maxWord = null
+            let visit = (node, word) => {
+                if (node[this.$] && node[this.$] > max) {
+                    max = node[this.$]
+                    maxWord = word
+                }
+
+                for (let p in node) {
+                    visit(node[p], word + p)
+                }
+            }
+            visit(this.root, '')
+            console.log({ maxWord, max })
+            console.timeEnd('Recursion')
+
+            return max
+        }
+    }
+
+    function randomWord(length) {
+        let s = ""
+        for (let i = 0; i < length; i++)
+            s += String.fromCharCode(Math.random() * 26 + "a".charCodeAt(0))
+        return s
+    }
+    let trie = new Trie()
+    let myTrie = new MyTrie()
+    for (let i = 0; i < 100000; i++) {
+        let s = randomWord(parseInt(Math.random() * (5 - 3 + 1) + 3, 10))
+        trie.insert(s)
+        myTrie.insert(s)
+    }
+
+</script>
+
+</html>
