@@ -1,0 +1,37 @@
+<script>
+    let callbacks = []
+    let usedReactivties = []
+    let object = {
+        a: 1,
+        b: 2
+    }
+    let po = reactive(object);
+
+    effect(() => {
+        // debugger
+        console.log(po.a)
+    })
+
+    function effect(callback) {
+        usedReactivties = []
+        callback()
+        console.log(usedReactivties) // [[{"a":1,"b":2},"a"]]"
+    }
+
+    function reactive(object) {
+        return new Proxy(object, {
+            set(obj, prop, val) {
+                obj[prop] = val
+                for (let callback of callbacks) {
+                    callback()
+                }
+                return obj[prop]
+            },
+            get(obj, prop) {
+                usedReactivties.push([obj, prop])
+                return obj[prop]
+            }
+        })
+    }
+
+</script>

@@ -1,0 +1,55 @@
+<script>
+    let callbacks = new Map()
+    let usedReactivties = []
+    let object = {
+        a: 1,
+        b: 2
+    }
+    let po = reactive(object);
+
+    effect(() => {
+        console.log(po.a)
+    })
+
+    function effect(callback) {
+        usedReactivties = []
+        callback()
+        console.log(usedReactivties)
+        for (const reacivity of usedReactivties) {
+            // reacivity[0] 为原对象 {"a":1,"b":2}
+            const obj = reacivity[0]
+            // reacivity[1] 为原属性 "a"
+            const prop = reacivity[1]
+
+            if (!callbacks.has(obj)) {
+                callbacks.set(obj, new Map());
+                // callbacks = Map(1){{"a":1,"b":2} => Map(0){}}
+            }
+            if (!callbacks.get(obj).has(prop)) {
+                callbacks.get(obj).set(prop, []);
+                // callbacks = Map(1){{"a":1,"b":2} => Map(1){'a' => []}}
+            }
+            callbacks.get(obj).get(prop).push(callback);
+            // callbacks = Map(1){{"a":1,"b":2} => Map(1){'a' => [callback]}}
+        }
+    }
+
+    function reactive(object) {
+        return new Proxy(object, {
+            set(obj, prop, val) {
+                obj[prop] = val
+                if (callbacks.get(obj))
+                    if (callbacks.get(obj).get(prop))
+                        for (let callback of callbacks.get(obj).get(prop)) {
+                            callback()
+                        }
+                return obj[prop]
+            },
+            get(obj, prop) {
+                usedReactivties.push([obj, prop])
+                return obj[prop]
+            }
+        })
+    }
+
+</script>
