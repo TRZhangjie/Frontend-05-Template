@@ -1,0 +1,29 @@
+<script>
+    function encodeUTF8(str) {
+        const arr = []
+        for (let i = 0; i < str.length; i++) {
+            const point = str.charCodeAt(i)
+
+            if (point < 128) {
+                arr.push(point)
+            } else if (point < 2048) {
+
+                arr.push((point >> 6) | 192)
+                arr.push((point & 63) | 128)
+            } else if (point <= 0xffff) {
+
+                arr.push((point >> 12) | 224)
+                arr.push((point >> 6) & 63 | 128)
+                arr.push((point & 63) | 128)
+            }
+
+        }
+        return Buffer.from(arr)
+    }
+    let str = '三'
+    console.log(
+        encodeUTF8(str),
+        Buffer.from(str, 'utf8'),
+    )
+
+</script>

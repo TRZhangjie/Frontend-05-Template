@@ -1,0 +1,16 @@
+<script>
+    class Dog {
+        lifeValue = 3
+        attack() {
+            return this.lifeValue
+        }
+    }
+    class People {
+        healthPoint = 100
+        injured(hurt) {
+            this.healthPoint = this.healthPoint - hurt
+        }
+    }
+    const person = new People()
+    const dog = new Dog()
+</script>
