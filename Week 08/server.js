@@ -1,6 +1,5 @@
-
 const http = require('http')
-
+/*
 const server = http.createServer((req, res) => {
     let body = []
     req.on('error', (err) => {
@@ -14,8 +13,7 @@ const server = http.createServer((req, res) => {
         res.end('hello world\n');
     }) 
 })
-
-/*
+*/
 const server = http.createServer((req, res) => {
     console.log("request received")
     console.log(req.headers)
@@ -44,5 +42,4 @@ body div img{
 </body>
 </html>`)
 })
-*/
 server.listen(8088)
