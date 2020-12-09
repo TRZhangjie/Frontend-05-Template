@@ -38,7 +38,7 @@ class Request{
                 console.log('data:', data.toString())
                 parser.receive(data.toString())
                 if(parser.isFinised){
-                    connection.end()
+                    // connection.end()
                     console.log(parser.response)
                     resolve(parser.response)
                 }
@@ -178,9 +178,9 @@ class TrunckedBodyParser{
     }
 }
 
-void async function(){     d
+void async function(){     
     let request = new Request({
-        host: '192.0.0.1',
+        host: '192.168.10.94',
         port: 8080,
         path: '/',
         headers: {
