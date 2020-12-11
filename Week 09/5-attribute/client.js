@@ -180,7 +180,7 @@ class TrunkedBodyParser{
             }
         }
         else if(this.current === this.WAITING_NEW_LINE){
-            if(char === '\n'){
+            if(char === '\r'){
                 this.current =  this.WAITING_NEW_LINE_END
             }
         }
