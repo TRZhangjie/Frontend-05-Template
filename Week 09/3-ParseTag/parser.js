@@ -39,8 +39,12 @@ function endTagOpen(c){
 
     }
 }
-
+// tagName:是 左尖括号开始 空格结束一个状态  
+// <html  
+// 如果遇到正斜杠，说明它是一个自封闭标签，进入 selfClosingStartTag 状态
+// 如果是右尖括号，说明它是一个普通的开始标签，结束状态回到data
 function tagName(c){
+    // 4种有效空白符：tab符 换行符 进制符 空格 
     if(c.match(/^[\t\n\f ]$/)) {
         return beforeAttributeName
     }else if( c == "/"){
@@ -68,6 +72,7 @@ function beforeAttributeName(c){
     }
 }
 
+// 自封闭状态
 function selfClosingStartTag(c){
     if( c == '>'){
         currentToken.isSelfClosing = true
