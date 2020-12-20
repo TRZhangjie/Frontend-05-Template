@@ -1,0 +1,123 @@
+<body>
+    <div>
+        <ul id="idt" class="cls">
+            <li>this is a li</li>
+        </ul>
+        <div id="container" class="bang">
+            <div id="foo" class="ban">
+                <div>
+                    <p class="x1">this is a p</p>
+                    <p class="x2">this is a p</p>
+                    <p class="x3">this is a p</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+<script>
+    setTimeout(() => {
+        console.log(match("div #idt.cls", document.getElementById("idt")));
+        console.log(match("#container>.ban", document.getElementById("foo")));
+        console.log(match("#container .x1~.x3", document.getElementsByClassName("x3")[0]));
+        console.log(match("#container .x1+.x3", document.getElementsByClassName("x3")[0]));
+    }, 1000);
+    function match(selector, element, type, times = 0, onlyOne = false) {
+        const { matched, matchedStr } = subMatch(selector, element);
+        let reg = null;
+        if (matched) {
+            if (new RegExp(`^${matchedStr}`).exec(selector)) {
+                return true;
+            } else {
+                if (
+                    new RegExp(`^([a-z0-9#.\\s]+) *([>]?) *${matchedStr}`).exec(selector) &&
+                    element.parentNode
+                ) {
+
+                    return match(RegExp.$1, element.parentNode, "parentNode", times + 1, RegExp.$2 === ">");
+                } else if (
+                    new RegExp(`^([a-z0-9#.\\s]+) *([\+\~]?) *${matchedStr}`).exec(selector) &&
+                    getPreSibling(element)
+                ) {
+
+                    return match(
+                        RegExp.$1,
+                        getPreSibling(element),
+                        "previousSibling",
+                        times + 1,
+                        RegExp.$2 === "+",
+                    );
+                } else {
+                    return false;
+                }
+            }
+        } else {
+            if (onlyOne === true && times > 0) return false;
+            if (type) {
+                return match(
+                    selector,
+                    type === "previousSibling" ? getPreSibling(element) : element[type],
+                    type,
+                    times + 1,
+                    onlyOne,
+                );
+            } else return false;
+        }
+
+        function getPreSibling(element) {
+            if (!element.previousSibling) return null;
+            if (element.previousSibling.nodeName === "#text") {
+                return getPreSibling(element.previousSibling);
+            } else {
+                return element.previousSibling;
+            }
+        }
+
+        function subMatch(selector, element) {
+            let { nodeName, id, className } = element;
+            nodeName = nodeName.toLowerCase();
+
+            function getCombinedSelectors(nodeName, id, className) {
+                let arr = [];
+                id = id ? `#${id}` : "";
+                className = className ? `.${className}` : "";
+                if (id && className) {
+                    arr.push(
+                        `${nodeName}${id}${className}`,
+                        `${nodeName}${className}${id}`,
+                        `${id}${className}${nodeName}`,
+                        `${id}${nodeName}${className}`,
+                        `${className}${nodeName}${id}`,
+                        `${className}${id}${nodeName}`,
+                        `${className}${id}`,
+                        `${id}${className}`,
+                    );
+                } else {
+                    if (id) {
+                        arr.push(`${id}${nodeName}`, `${nodeName}${id}`);
+                    }
+                    if (className) {
+                        arr.push(`${nodeName}${className}`, `${className}${nodeName}`);
+                    }
+                }
+                if (id) arr.push(id);
+                if (className) arr.push(className);
+                arr.push(nodeName);
+                return arr;
+            }
+            let arr = getCombinedSelectors(nodeName, id, className);
+            let res = {
+                matched: false,
+                matchedStr: "",
+            };
+            for (const s of arr) {
+                if (selector.indexOf(s) !== -1) {
+                    res.matched = true;
+                    res.matchedStr = s;
+                    break;
+                }
+            }
+            return res;
+        }
+    }
+</script>
