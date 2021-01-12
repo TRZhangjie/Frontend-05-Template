@@ -1,0 +1,29 @@
+# Xcode
+.DS_Store
+*/build/*
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+xcuserdata
+profile
+*.moved-aside
+DerivedData
+.idea/
+*.hmap
+
+#CocoaPods
+Pods
+
+## node_modules - 忽略bundle文件内容
+*node_modules
+ 
+## bundle 	- 忽略bundle文件内容
+*XiaoWoJinFu/bundle/
+
+## framework 	- 忽略framework文件内容
+XiaoWoJinFu/XiaoWoJinFu/framework/
