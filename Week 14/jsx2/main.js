@@ -66,12 +66,6 @@ class TextWrapper {
     constructor(content){
         this.root = document.createTextNode(content)
     }
-    setAttribute(name, value){
-        this.root.setAttribute(name, value)
-    }
-    appendChild(child){
-        child.mountTo(this.root)
-    }
     mountTo(parent){
         parent.appendChild(this.root)
     }
