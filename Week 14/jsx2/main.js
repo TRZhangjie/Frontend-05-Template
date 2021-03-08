@@ -71,7 +71,7 @@ class TextWrapper {
     }
 }
 
-class Div {
+class Carousel {
     constructor(){
         this.root = document.createElement('div')
     }
